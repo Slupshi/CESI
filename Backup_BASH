@@ -1,0 +1,18 @@
+#!/bin/bash
+website=/var/www/wordpress
+vhost=/etc/apache2/sites-available/wordpress.conf
+db_name=wordpress
+db_login=wordpress
+db_pwd=toor
+BACKUPTIME=$(date +%Y-%m-%d)
+db_backup_file=$DESTINATION/export_$db_name"_"$BACKUPTIME.sql
+
+mysqldump -u $db_login -p$db_pwd $db_name > $db_backup_file
+
+
+file_name=backup_wordpress_du_$BACKUPTIME.tar.gz
+DESTINATION=/BACKUP
+dest=$DESTINATION/$file_name
+backup_files=$vhost $website
+
+tar -czf $dest $backup_files $db_backup_file
