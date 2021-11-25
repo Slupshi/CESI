@@ -1,0 +1,30 @@
+#!/bin/bash
+
+username=$1
+user_file=/home/$username
+
+adduser $username
+
+echo "$username" >> $user_file/test.txt
+
+
+site_file=/var/www/$username-site
+mkdir $site_file
+echo_content="Je suis le nouvel utilisateur, mon nom est $username;"
+echo "
+<?php
+echo '$echo_content'
+?>" >> $site_file/index.php
+
+
+conf_file=/etc/apache2/sites-available/$username-site.conf
+
+
+echo "
+<VirtualHost *:80>
+ServerAdmin contact@di21.fr
+ServerName www.$username-di21.fr
+DocumentRoot $site_file
+</VirtualHost>" > $conf_file
+
+a2ensite $username-site.conf && a2dissite 000-default.conf && service apache2 restart
