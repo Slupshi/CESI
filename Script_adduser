@@ -30,8 +30,6 @@ DocumentRoot $site_file
 a2ensite $username-site.conf && a2dissite 000-default.conf && service apache2 restart
 
 
-cat >> $user_file/logs.txt
-
-log_time=$(date +%Y-%m-%d %H:%M:%S)
+log_time=$(date +%Y-%m-%d_%H:%M:%S)
 
 echo "Création du compte $username : $log_time" >> $user_file/logs.txt
