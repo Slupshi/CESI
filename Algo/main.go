@@ -11,6 +11,7 @@ var (
 	courtoisie       string = "Bonjour je suis " + name
 	drinkType        string
 	isDrinkAvailable bool
+	boissons         = []string{"Eau", "Cafe", "The", "eau", "cafe", "the"}
 )
 
 const name string = "BlipBloop"
@@ -20,12 +21,27 @@ func main() {
 	//nbDrink = nbDrink - 49
 	//fmt.Printf("Vous êtes vraiment groumand ! Il ne me reste que %v boisson", nbDrink)
 	scanner := bufio.NewScanner(os.Stdin)
-	fmt.Printf("%v je dispose de %v boissons (Cafe/The/Eau)\n", courtoisie, nbDrink)
+	fmt.Printf("%v je dispose de %v boissons parmi ceci ", courtoisie, nbDrink)
+	PrintBoissons()
 	for {
-		fmt.Print("Quelle boisson vouelez vous ? ")
+		fmt.Print("Quelle boisson voulez vous ? ")
 		scanner.Scan()
 		drinkType = scanner.Text()
-		switch drinkType {
+		for index, value := range boissons {
+			if drinkType == value {
+				drinkType = scanner.Text()
+				isDrinkAvailable = true
+				break
+			} else if drinkType == "*" {
+				fmt.Print("Good Bye")
+				index++
+				return
+			}
+			isDrinkAvailable = false
+
+		}
+
+		/*switch drinkType {
 		case "Cafe":
 			drinkType = scanner.Text()
 			isDrinkAvailable = true
@@ -44,10 +60,10 @@ func main() {
 		default:
 			isDrinkAvailable = false
 			break
-		}
+		}*/
 		if nbDrink > 0 && isDrinkAvailable == true {
 			Serve(&nbDrink)
-			fmt.Printf("Voici votre %v, il m'en reste %v\n", drinkType, nbDrink)
+			fmt.Printf("Voici votre %v, il me reste %v autres boissons\n", drinkType, nbDrink)
 		} else if nbDrink > 0 && isDrinkAvailable == false {
 			fmt.Printf("Il n'y a pas de boissons de ce type dans %v\n", name)
 		} else {
@@ -60,4 +76,14 @@ func main() {
 
 func Serve(boissons *int) {
 	*boissons--
+}
+
+func PrintBoissons() {
+	fmt.Print("( ")
+	s := boissons[:3]
+	for index, value := range s {
+		index++
+		fmt.Printf("#%v %v, ", index, value)
+	}
+	fmt.Print(" )\n")
 }
