@@ -25,27 +25,7 @@ func main() {
 		Drinks: 30,
 		Name:   "BlipBloop"}
 
-	blipbloop.SayHello()
-	PrintBoissons()
-	stocks := make(map[string]int)
-	stocks["Eau"] = baseStocks
-	stocks["Cafe"] = baseStocks
-	stocks["The"] = baseStocks
-	for {
-		fmt.Print("Quelle boisson voulez vous ? ")
-		fmt.Printf("%v Eau | %v Café | %v Thé\n", stocks["Eau"], stocks["Cafe"], stocks["The"])
-		blipbloop.GetInput(stocks)
-
-		if blipbloop.Drinks > 0 && isDrinkAvailable == true {
-			blipbloop.Serve(&blipbloop.Drinks)
-			fmt.Printf("Voici votre %v, il me reste %v autres boissons\n", drinkType, blipbloop.Drinks)
-		} else if blipbloop.Drinks > 0 && isDrinkAvailable == false {
-			fmt.Printf("Il n'y a pas de boissons de ce type dans %v\n", blipbloop.Name)
-		} else {
-			fmt.Printf("Il n'y a plus de boissons disponible dans %v\n", blipbloop.Name)
-		}
-
-	}
+	blipbloop.RunMachine()
 
 }
 
@@ -111,5 +91,29 @@ func (distributeur Machine) GetInput(stocks map[string]int) {
 	default:
 		isDrinkAvailable = false
 		break
+	}
+}
+
+func (distributeur Machine) RunMachine() {
+	distributeur.SayHello()
+	PrintBoissons()
+	stocks := make(map[string]int)
+	stocks["Eau"] = baseStocks
+	stocks["Cafe"] = baseStocks
+	stocks["The"] = baseStocks
+	for {
+		fmt.Print("Quelle boisson voulez vous ? ")
+		fmt.Printf("%v Eau | %v Café | %v Thé\n", stocks["Eau"], stocks["Cafe"], stocks["The"])
+		distributeur.GetInput(stocks)
+
+		if distributeur.Drinks > 0 && isDrinkAvailable == true {
+			distributeur.Serve(&distributeur.Drinks)
+			fmt.Printf("Voici votre %v, il me reste %v autres boissons\n", drinkType, distributeur.Drinks)
+		} else if distributeur.Drinks > 0 && isDrinkAvailable == false {
+			fmt.Printf("Il n'y a pas de boissons de ce type dans %v\n", distributeur.Name)
+		} else {
+			fmt.Printf("Il n'y a plus de boissons disponible dans %v\n", distributeur.Name)
+		}
+
 	}
 }
