@@ -40,18 +40,18 @@ func main() {
 			blipbloop.Serve(&blipbloop.Drinks)
 			fmt.Printf("Voici votre %v, il me reste %v autres boissons\n", drinkType, blipbloop.Drinks)
 		} else if blipbloop.Drinks > 0 && isDrinkAvailable == false {
-			fmt.Printf("Il n'y a pas de boissons de ce type dans %v\n", name)
+			fmt.Printf("Il n'y a pas de boissons de ce type dans %v\n", blipbloop.Name)
 		} else {
-			fmt.Printf("Il n'y a plus de boissons disponible dans %v\n", name)
+			fmt.Printf("Il n'y a plus de boissons disponible dans %v\n", blipbloop.Name)
 		}
 
 	}
 
 }
 
-func Serve(boissons *int) {
+/*func Serve(boissons *int) {
 	*boissons--
-}
+}*/
 
 func PrintBoissons() {
 	fmt.Print("( ")
