@@ -7,64 +7,39 @@ import (
 )
 
 var (
-	nbDrink          int    = 50
-	courtoisie       string = "Bonjour je suis " + name
 	drinkType        string
 	isDrinkAvailable bool
-	boissons         = []string{"Eau", "Cafe", "The", "eau", "cafe", "the"}
+	boissons         = []string{"Eau", "Cafe", "The"}
 )
 
+type Machine struct {
+	Name   string
+	Drinks int
+}
+
 const name string = "BlipBloop"
+const baseStocks int = 10
 
 func main() {
-	//fmt.Printf("%v il me reste %v boissons\n", courtoisie, nbDrink)
-	//nbDrink = nbDrink - 49
-	//fmt.Printf("Vous êtes vraiment groumand ! Il ne me reste que %v boisson", nbDrink)
-	scanner := bufio.NewScanner(os.Stdin)
-	fmt.Printf("%v je dispose de %v boissons parmi ceci ", courtoisie, nbDrink)
+	blipbloop := Machine{
+		Drinks: 30,
+		Name:   "BlipBloop"}
+
+	blipbloop.SayHello()
 	PrintBoissons()
+	stocks := make(map[string]int)
+	stocks["Eau"] = baseStocks
+	stocks["Cafe"] = baseStocks
+	stocks["The"] = baseStocks
 	for {
 		fmt.Print("Quelle boisson voulez vous ? ")
-		scanner.Scan()
-		drinkType = scanner.Text()
-		for index, value := range boissons {
-			if drinkType == value {
-				drinkType = scanner.Text()
-				isDrinkAvailable = true
-				break
-			} else if drinkType == "*" {
-				fmt.Print("Good Bye")
-				index++
-				return
-			}
-			isDrinkAvailable = false
+		fmt.Printf("%v Eau | %v Café | %v Thé\n", stocks["Eau"], stocks["Cafe"], stocks["The"])
+		blipbloop.GetInput(stocks)
 
-		}
-
-		/*switch drinkType {
-		case "Cafe":
-			drinkType = scanner.Text()
-			isDrinkAvailable = true
-			break
-		case "The":
-			drinkType = scanner.Text()
-			isDrinkAvailable = true
-			break
-		case "Eau":
-			drinkType = scanner.Text()
-			isDrinkAvailable = true
-			break
-		case "*":
-			fmt.Print("Good Bye")
-			return
-		default:
-			isDrinkAvailable = false
-			break
-		}*/
-		if nbDrink > 0 && isDrinkAvailable == true {
-			Serve(&nbDrink)
-			fmt.Printf("Voici votre %v, il me reste %v autres boissons\n", drinkType, nbDrink)
-		} else if nbDrink > 0 && isDrinkAvailable == false {
+		if blipbloop.Drinks > 0 && isDrinkAvailable == true {
+			blipbloop.Serve(&blipbloop.Drinks)
+			fmt.Printf("Voici votre %v, il me reste %v autres boissons\n", drinkType, blipbloop.Drinks)
+		} else if blipbloop.Drinks > 0 && isDrinkAvailable == false {
 			fmt.Printf("Il n'y a pas de boissons de ce type dans %v\n", name)
 		} else {
 			fmt.Printf("Il n'y a plus de boissons disponible dans %v\n", name)
@@ -86,4 +61,55 @@ func PrintBoissons() {
 		fmt.Printf("#%v %v, ", index, value)
 	}
 	fmt.Print(" )\n")
+}
+
+//Methodes
+func (distributeur Machine) SayHello() {
+	fmt.Printf("Bonjour je suis %v, je dispose de %v boissons parmi ceci ", distributeur.Name, distributeur.Drinks)
+}
+
+func (distributeur Machine) Serve(boissons *int) {
+	*boissons--
+}
+
+func (distributeur Machine) GetInput(stocks map[string]int) {
+
+	scanner := bufio.NewScanner(os.Stdin)
+	scanner.Scan()
+	drinkType = scanner.Text()
+	switch drinkType {
+	case "Cafe":
+		drinkType = scanner.Text()
+		if stocks["Cafe"] > 0 {
+			isDrinkAvailable = true
+			stocks["Cafe"]--
+		} else {
+			isDrinkAvailable = false
+		}
+		break
+	case "The":
+		drinkType = scanner.Text()
+		if stocks["The"] > 0 {
+			isDrinkAvailable = true
+			stocks["The"]--
+		} else {
+			isDrinkAvailable = false
+		}
+		break
+	case "Eau":
+		drinkType = scanner.Text()
+		if stocks["Eau"] > 0 {
+			isDrinkAvailable = true
+			stocks["Eau"]--
+		} else {
+			isDrinkAvailable = false
+		}
+		break
+	case "*":
+		fmt.Print("Good Bye")
+		return
+	default:
+		isDrinkAvailable = false
+		break
+	}
 }
