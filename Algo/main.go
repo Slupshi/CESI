@@ -4,6 +4,7 @@ import (
 	"bufio"
 	"fmt"
 	"os"
+	"time"
 )
 
 var (
@@ -86,8 +87,7 @@ func (distributeur Machine) GetInput(stocks map[string]int) {
 		}
 		break
 	case "*":
-		fmt.Print("Good Bye")
-		return
+		distributeur.StopMachine()
 	default:
 		isDrinkAvailable = false
 		break
@@ -108,7 +108,8 @@ func (distributeur Machine) RunMachine() {
 
 		if distributeur.Drinks > 0 && isDrinkAvailable == true {
 			distributeur.Serve(&distributeur.Drinks)
-			fmt.Printf("Voici votre %v, il me reste %v autres boissons\n", drinkType, distributeur.Drinks)
+			commandeTime := time.Now()
+			fmt.Printf("Voici votre %v du %v, il me reste %v autres boissons\n", drinkType, commandeTime, distributeur.Drinks)
 		} else if distributeur.Drinks > 0 && isDrinkAvailable == false {
 			fmt.Printf("Il n'y a pas de boissons de ce type dans %v\n", distributeur.Name)
 		} else {
@@ -116,4 +117,9 @@ func (distributeur Machine) RunMachine() {
 		}
 
 	}
+}
+
+func (distributeur Machine) StopMachine() {
+	fmt.Print("Good Bye")
+	os.Exit(0)
 }
