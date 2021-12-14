@@ -33,7 +33,7 @@ func main() {
 		Drinks:          30,
 		Name:            "BlipBloop",
 		IsInMaintenance: false}
-
+	blipbloop.JsonHTTP()
 	blipbloop.RunMachine()
 
 }
@@ -88,8 +88,6 @@ func (distributeur Machine) GetInput(stocks map[string]int) {
 		distributeur.StopMachine()
 	} else if drinkType == "m" {
 		distributeur.MachineMaintenance(stocks)
-	} else if drinkType == "p" {
-		distributeur.JsonHTTP()
 	} else {
 		s := boissons[:]
 		for index, value := range s {
@@ -162,8 +160,6 @@ func (distributeur Machine) MachineMaintenance(stocks map[string]int) {
 				break
 			} else if drinkType == "logs" {
 				distributeur.SaveLog()
-			} else if drinkType == "p" {
-				distributeur.JsonHTTP()
 			} else {
 				distributeur.IsInMaintenance = false
 				return
