@@ -2,7 +2,9 @@ package main
 
 import (
 	"bufio"
+	"encoding/csv"
 	"fmt"
+	"log"
 	"os"
 	"strconv"
 	"time"
@@ -12,6 +14,8 @@ var (
 	drinkType        string
 	isDrinkAvailable bool
 	boissons         = []string{"Eau", "Cafe", "The"}
+	com              []string
+	commands         [][]string
 )
 
 type Machine struct {
@@ -31,13 +35,9 @@ func main() {
 
 }
 
-/*func Serve(boissons *int) {
-	*boissons--
-}*/
-
 func PrintBoissons() {
 	fmt.Print("( ")
-	s := boissons[:3]
+	s := boissons[:]
 	for index, value := range s {
 		index++
 		fmt.Printf("#%v %v, ", index, value)
@@ -54,47 +54,40 @@ func (distributeur Machine) Serve(boissons *int) {
 	*boissons--
 }
 
+func (distributeur Machine) PrintStocks(stocks map[string]int) {
+	s := boissons[:]
+	for _, value := range s {
+		fmt.Printf("| %v %v ", stocks[value], value)
+
+	}
+	fmt.Print("|\n")
+}
+
 func (distributeur Machine) GetInput(stocks map[string]int) {
 
 	scanner := bufio.NewScanner(os.Stdin)
 	scanner.Scan()
 	drinkType = scanner.Text()
-	switch drinkType {
-	case "Cafe":
-		drinkType = scanner.Text()
-		if stocks["Cafe"] > 0 {
-			isDrinkAvailable = true
-			stocks["Cafe"]--
-		} else {
-			isDrinkAvailable = false
-		}
-		break
-	case "The":
-		drinkType = scanner.Text()
-		if stocks["The"] > 0 {
-			isDrinkAvailable = true
-			stocks["The"]--
-		} else {
-			isDrinkAvailable = false
-		}
-		break
-	case "Eau":
-		drinkType = scanner.Text()
-		if stocks["Eau"] > 0 {
-			isDrinkAvailable = true
-			stocks["Eau"]--
-		} else {
-			isDrinkAvailable = false
-		}
-		break
-	case "*":
+	if drinkType == "*" {
 		distributeur.StopMachine()
-	case "m":
+	} else if drinkType == "m" {
 		distributeur.MachineMaintenance(stocks)
-		break
-	default:
-		isDrinkAvailable = false
-		break
+	} else {
+		s := boissons[:]
+		for index, value := range s {
+			if drinkType == s[index] {
+				drinkType = value
+				if stocks[drinkType] > 0 {
+					isDrinkAvailable = true
+					stocks[drinkType]--
+					break
+				} else {
+					isDrinkAvailable = false
+				}
+			} else {
+				isDrinkAvailable = false
+			}
+		}
 	}
 }
 
@@ -107,13 +100,17 @@ func (distributeur Machine) RunMachine() {
 	stocks["The"] = baseStocks
 	for {
 		fmt.Print("Quelle boisson voulez vous ? ")
-		fmt.Printf("%v Eau | %v Café | %v Thé\n", stocks["Eau"], stocks["Cafe"], stocks["The"])
+		distributeur.PrintStocks(stocks)
 		fmt.Print("Appuyez sur \"m\" pour entrer en mode maintenance\n")
 		distributeur.GetInput(stocks)
 
 		if distributeur.Drinks > 0 && isDrinkAvailable == true {
 			distributeur.Serve(&distributeur.Drinks)
 			commandeTime := time.Now().Format(time.Kitchen)
+			commandelog := fmt.Sprintf("[%v] 1 %v sur le distributeur %v", commandeTime, drinkType, distributeur.Name)
+			com = append(com, commandelog)
+			commands = append(commands, com)
+			com = nil
 			fmt.Printf("Voici votre %v de %v, il me reste %v autres boissons\n", drinkType, commandeTime, distributeur.Drinks)
 		} else if distributeur.Drinks > 0 && isDrinkAvailable == false {
 			fmt.Printf("Il n'y a pas de boissons de ce type dans %v\n", distributeur.Name)
@@ -131,7 +128,9 @@ func (distributeur Machine) StopMachine() {
 
 func (distributeur Machine) MachineMaintenance(stocks map[string]int) {
 	for {
+
 		fmt.Print("De quelle boisson voulez vous vous occupez ?\n")
+		fmt.Print("Press \"logs\" to save the commands logs\n")
 		for index, value := range boissons {
 			index++
 			fmt.Printf("%v, ", value)
@@ -140,24 +139,17 @@ func (distributeur Machine) MachineMaintenance(stocks map[string]int) {
 		scanner := bufio.NewScanner(os.Stdin)
 		scanner.Scan()
 		drinkType = scanner.Text()
-		switch drinkType {
-		case "Cafe":
-			drinkType = scanner.Text()
-			//distributeur.ManageCoffee(stocks)
-			distributeur.ManageDrinks(stocks, "Cafe")
-			break
-		case "The":
-			drinkType = scanner.Text()
-			//distributeur.ManageTea(stocks)
-			distributeur.ManageDrinks(stocks, "The")
-			break
-		case "Eau":
-			drinkType = scanner.Text()
-			//distributeur.ManageWater(stocks)
-			distributeur.ManageDrinks(stocks, "Eau")
-			break
-		default:
-			return
+		s := boissons[:]
+		for index, value := range s {
+			if drinkType == s[index] {
+				drinkType = value
+				distributeur.ManageDrinks(stocks, drinkType)
+				break
+			} else if drinkType == "logs" {
+				distributeur.SaveLog()
+			} else {
+				return
+			}
 		}
 	}
 
@@ -202,4 +194,20 @@ func (distributeur *Machine) ManageDrinks(stocks map[string]int, drinks string) 
 			break
 		}
 	}
+}
+
+func (distributeur Machine) SaveLog() {
+	file, err := os.Create("commands_logs.csv")
+	if err != nil {
+		log.Fatalf("Error %v", err)
+	}
+
+	defer file.Close()
+
+	writer := csv.NewWriter(file)
+	defer writer.Flush()
+	for _, value := range commands {
+		writer.Write(value)
+	}
+
 }
