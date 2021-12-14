@@ -59,10 +59,7 @@ func (distributeur Machine) JsonHTTP() {
 	})
 
 	//Use the default DefaultServeMux.
-	err := http.ListenAndServe(":8080", nil)
-	if err != nil {
-		log.Fatal(err)
-	}
+	go http.ListenAndServe(":8080", nil)
 }
 
 func (distributeur Machine) SayHello() {
@@ -173,7 +170,6 @@ func (distributeur Machine) MachineMaintenance(stocks map[string]int) {
 			}
 		}
 	}
-
 }
 
 func (distributeur *Machine) ManageDrinks(stocks map[string]int, drinks string) {
