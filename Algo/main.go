@@ -3,8 +3,10 @@ package main
 import (
 	"bufio"
 	"encoding/csv"
+	"encoding/json"
 	"fmt"
 	"log"
+	"net/http"
 	"os"
 	"strconv"
 	"time"
@@ -19,17 +21,18 @@ var (
 )
 
 type Machine struct {
-	Name   string
-	Drinks int
+	Name            string `json:"Name"`
+	Drinks          int    `json:"Nombre de boissons"`
+	isInMaintenance bool   `json:"Le distributeur est en maintenance"`
 }
 
-const name string = "BlipBloop"
 const baseStocks int = 10
 
 func main() {
 	blipbloop := Machine{
-		Drinks: 30,
-		Name:   "BlipBloop"}
+		Drinks:          30,
+		Name:            "BlipBloop",
+		isInMaintenance: false}
 
 	blipbloop.RunMachine()
 
@@ -46,6 +49,23 @@ func PrintBoissons() {
 }
 
 //Methodes
+
+func (distributeur Machine) JsonHTTP() {
+	jsonMachine, _ := json.Marshal(distributeur)
+
+	// Set routing rules
+	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+		w.Write(jsonMachine)
+	})
+
+	//Use the default DefaultServeMux.
+	err := http.ListenAndServe(":8080", nil)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+}
+
 func (distributeur Machine) SayHello() {
 	fmt.Printf("Bonjour je suis %v, je dispose de %v boissons parmi ceci ", distributeur.Name, distributeur.Drinks)
 }
@@ -72,6 +92,8 @@ func (distributeur Machine) GetInput(stocks map[string]int) {
 		distributeur.StopMachine()
 	} else if drinkType == "m" {
 		distributeur.MachineMaintenance(stocks)
+	} else if drinkType == "p" {
+		distributeur.JsonHTTP()
 	} else {
 		s := boissons[:]
 		for index, value := range s {
@@ -99,6 +121,7 @@ func (distributeur Machine) RunMachine() {
 	stocks["Cafe"] = baseStocks
 	stocks["The"] = baseStocks
 	for {
+		distributeur.isInMaintenance = false
 		fmt.Print("Quelle boisson voulez vous ? ")
 		distributeur.PrintStocks(stocks)
 		fmt.Print("Appuyez sur \"m\" pour entrer en mode maintenance\n")
@@ -128,14 +151,10 @@ func (distributeur Machine) StopMachine() {
 
 func (distributeur Machine) MachineMaintenance(stocks map[string]int) {
 	for {
-
+		distributeur.isInMaintenance = true
 		fmt.Print("De quelle boisson voulez vous vous occupez ?\n")
+		distributeur.PrintStocks(stocks)
 		fmt.Print("Press \"logs\" to save the commands logs\n")
-		for index, value := range boissons {
-			index++
-			fmt.Printf("%v, ", value)
-		}
-		fmt.Print("\n")
 		scanner := bufio.NewScanner(os.Stdin)
 		scanner.Scan()
 		drinkType = scanner.Text()
@@ -148,6 +167,7 @@ func (distributeur Machine) MachineMaintenance(stocks map[string]int) {
 			} else if drinkType == "logs" {
 				distributeur.SaveLog()
 			} else {
+				distributeur.isInMaintenance = false
 				return
 			}
 		}
@@ -209,5 +229,4 @@ func (distributeur Machine) SaveLog() {
 	for _, value := range commands {
 		writer.Write(value)
 	}
-
 }
