@@ -23,7 +23,7 @@ var (
 type Machine struct {
 	Name            string `json:"Name"`
 	Drinks          int    `json:"Nombre de boissons"`
-	isInMaintenance bool   `json:"Le distributeur est en maintenance"`
+	IsInMaintenance bool   `json:"Le distributeur est en maintenance"`
 }
 
 const baseStocks int = 10
@@ -32,7 +32,7 @@ func main() {
 	blipbloop := Machine{
 		Drinks:          30,
 		Name:            "BlipBloop",
-		isInMaintenance: false}
+		IsInMaintenance: false}
 
 	blipbloop.RunMachine()
 
@@ -63,7 +63,6 @@ func (distributeur Machine) JsonHTTP() {
 	if err != nil {
 		log.Fatal(err)
 	}
-
 }
 
 func (distributeur Machine) SayHello() {
@@ -121,7 +120,7 @@ func (distributeur Machine) RunMachine() {
 	stocks["Cafe"] = baseStocks
 	stocks["The"] = baseStocks
 	for {
-		distributeur.isInMaintenance = false
+		distributeur.IsInMaintenance = false
 		fmt.Print("Quelle boisson voulez vous ? ")
 		distributeur.PrintStocks(stocks)
 		fmt.Print("Appuyez sur \"m\" pour entrer en mode maintenance\n")
@@ -151,7 +150,7 @@ func (distributeur Machine) StopMachine() {
 
 func (distributeur Machine) MachineMaintenance(stocks map[string]int) {
 	for {
-		distributeur.isInMaintenance = true
+		distributeur.IsInMaintenance = true
 		fmt.Print("De quelle boisson voulez vous vous occupez ?\n")
 		distributeur.PrintStocks(stocks)
 		fmt.Print("Press \"logs\" to save the commands logs\n")
@@ -166,8 +165,10 @@ func (distributeur Machine) MachineMaintenance(stocks map[string]int) {
 				break
 			} else if drinkType == "logs" {
 				distributeur.SaveLog()
+			} else if drinkType == "p" {
+				distributeur.JsonHTTP()
 			} else {
-				distributeur.isInMaintenance = false
+				distributeur.IsInMaintenance = false
 				return
 			}
 		}
