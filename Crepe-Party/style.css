@@ -73,7 +73,7 @@ body{
     display: flex;
     flex-direction: column;
     justify-content: end;    
-    align-items: center;    
+    align-items: center;
 }
   
 .Recette { 
@@ -113,7 +113,7 @@ body{
 
 .peopleInputDiv{    
     width: 80%;
-    height: 50%;
+    height: 50%;    
 }
 
 .peopleInputDiv > .Label{
@@ -135,6 +135,7 @@ body{
     display: flex;
     flex-direction: row;
     align-items: center;
+    border: 1px solid black;
 }
 
 #arrowDown{
@@ -225,6 +226,11 @@ input[type=number] {
     font-size: large;
 }
 
+.asterisqueLabel{
+    font-style: italic;
+    font-size: smaller;
+    text-align: end;
+}
 
 .IngredientsDiv{
     background-color: #a3a1a1;
@@ -255,4 +261,5 @@ input[type=number] {
     align-items: center;
     font-weight: bold;
 }
+
 

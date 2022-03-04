@@ -44,7 +44,7 @@ function Crepes()
     document.getElementById("flourLabel").innerText = "Farine : " + finalIngredient[0] + " g";
     document.getElementById("eggLabel").innerText = "Oeuf : " + finalIngredient[1] + " unité" + sOeuf;
     document.getElementById("milkLabel").innerText = "Lait : " + finalIngredient[2].toFixed(1) + " L";
-    document.getElementById("sugarLabel").innerText = "Sucre : " + finalIngredient[3] + " c à s";
+    document.getElementById("sugarLabel").innerText = "Sucre : " + finalIngredient[3] + " c à s*";
     document.getElementById("butterLabel").innerText = "Beurre : " + finalIngredient[4] + " g";
     document.getElementById("lastIngredientLabel").innerText = "Pour " + invite + sCrepe;
 
