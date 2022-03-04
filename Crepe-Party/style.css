@@ -33,7 +33,7 @@ body{
     width: 90%;
     height: 90%;
     border: 2px solid black;
-    border-radius: 5%;
+    border-radius: 5%;    
 }
   
 .Container {  
@@ -51,6 +51,7 @@ body{
 .Name { 
     grid-area: Name;
     display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
 }
@@ -106,7 +107,6 @@ body{
     align-items: center;
     font-size: 50;    
     width: 70%;
-    height: 70%;
 }
 
 /* region Input */
@@ -138,14 +138,12 @@ body{
 }
 
 #arrowDown{
-    width: 4%;
-    height: 55%;
-    
-   
+    width: auto;
+    height: 55%;    
 }
 
 #arrowUp{
-    width: 4%;
+    width: auto;
     height: 55%;
     
 }
@@ -183,6 +181,10 @@ input[type=number] {
     border-radius: 5%;
 }
 
+.inputButton:hover{    
+    background-color: #f3f3f3;
+}
+
 /* region Recipe */
 
 .IngredientDiv{
@@ -198,7 +200,7 @@ input[type=number] {
 .RecetteDiv{
     border-top: 0;
     width: 90%;
-    height: 40em;
+    height: 40em;    
     display: flex;
     flex-direction: column;
     justify-content: space-evenly;
@@ -227,7 +229,6 @@ input[type=number] {
 .IngredientsDiv{
     background-color: #a3a1a1;
     width: 20%;
-    min-height: 30%;
     height: 30%;
 }
 
