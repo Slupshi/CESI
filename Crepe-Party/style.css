@@ -114,7 +114,6 @@ body{
 .peopleInputDiv{    
     width: 80%;
     height: 50%;
-    
 }
 
 .peopleInputDiv > .Label{
@@ -158,7 +157,7 @@ body{
     border: 0;
     text-align: end;
     font-size: larger;
-    padding-right: 5%;
+    padding-right: 2%;
 }
 
 /* NoArrowOnInput */
@@ -199,8 +198,10 @@ input[type=number] {
 .RecetteDiv{
     border-top: 0;
     width: 90%;
-    height: 95%;
-    position: relative;
+    height: 40em;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
     inline-size: 90%;
     overflow-y: scroll;
 }
@@ -212,7 +213,7 @@ input[type=number] {
 }
 
 .RecetteDiv > .Label{
-    position: absolute;
+    
     margin-left: 5%;
     top: 5%;
 }

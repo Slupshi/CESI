@@ -23,4 +23,17 @@ function Crepes(){
     // console.info("Sucre : " + finalIngredient[3] + " c à s");
     // console.info("Beurre : " + finalIngredient[4] + " g");
 }
+
+let 
+
+function InputUp(){
+    document.getElementById("peopleNumberInput").value++;  
+}
+
+function InputDown(){
+    if(document.getElementById("peopleNumberInput").value > 0){
+        document.getElementById("peopleNumberInput").value--;  
+    }
+}
+
 //#endregion Crepes

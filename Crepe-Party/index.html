@@ -50,9 +50,9 @@
                         Nombre de personnes
                     </label>
                     <div class="peopleInput">
-                        <input id="peopleNumberInput" type="number">
-                        <img id="arrowUp" src="https://img.icons8.com/windows/32/000000/circled-chevron-up.png"/>
-                        <img id="arrowDown" src="https://img.icons8.com/windows/32/000000/circled-chevron-down--v1.png"/>
+                        <input id="peopleNumberInput" type="number" min="0">
+                        <img id="arrowUp" src="https://img.icons8.com/windows/32/000000/circled-chevron-up.png" onclick="InputUp()"/>
+                        <img id="arrowDown" src="https://img.icons8.com/windows/32/000000/circled-chevron-down--v1.png" onclick="InputDown()"/>
                     </div>
                     <button class="inputButton" onclick="Crepes()">Générer</button>
                 </div>
