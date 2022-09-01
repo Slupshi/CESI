@@ -17,6 +17,8 @@ public class ConsoleGameView implements GameView {
 	private String userInput;
 	private String errorMessage;
 	private boolean exitRequest;
+	private static final String KEYWORD_EXIT = "E";
+	private static final String KEYWORD_RESTART = "R";
 	
 	// CONSTRUCTOR
 	
@@ -33,25 +35,34 @@ public class ConsoleGameView implements GameView {
 	@Override
 	public void play() {
 		clearConsole();
+		System.out.println("Exit : E, Restart : R");
 		displayGrid();
 		try {
 			do {
 				errorMessage = null;
 				displayGameState();
 				userInput = reader.readLine();
-				if (!game.isOver()) {
 					try {
-						int column = Integer.parseInt(userInput);
-						game.putToken(column);
+						switch(userInput){
+							case KEYWORD_EXIT:
+								this.exitRequest = true;
+								break;
+							case KEYWORD_RESTART:
+								clearConsole();
+								this.game.init();
+								break;
+							default:
+								int column = Integer.parseInt(userInput);
+								if (!game.isOver())
+									game.putToken(column);
+								break;
+						}
 						clearConsole();
 					} catch (NumberFormatException e) {
 						errorMessage = "Je n'ai pas compris cette réponse...";
 					} catch (ConnectException ex){
-						errorMessage = "Ce chiffre ne correspond à aucune colonne !";
+						errorMessage = ex.getMessage();
 					}
-				} else {
-					errorMessage = "Je n'ai pas compris cette réponse...";
-				}
 				if (errorMessage != null) {
 					System.err.println(errorMessage);
 				}

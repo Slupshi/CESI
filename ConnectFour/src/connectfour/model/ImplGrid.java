@@ -30,6 +30,9 @@ public class ImplGrid implements Grid{
         while (y < grid[x].length && grid[x][y] != null) {
             y++;
         }
+        if(y >= grid[x].length){
+            throw new ConnectException("La colonne est pleine");
+        }
         grid[x][y] = token;
         rowOfLastPutToken = y;
     }
